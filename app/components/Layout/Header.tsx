@@ -1,11 +1,19 @@
-import React from 'react'
+'use client';
+import React from "react";
 
 const Header = () => {
-  return (
-    <header className='bg-green-500 text-black p-4'>
-        Cookie Stand Admin 
-    </header>
-  )
-}
+  const refreshPage = () => {
+    window.location.reload();
+  };
 
-export default Header
+  return (
+    <header
+      className="bg-green-500 text-black p-4 cursor-pointer"
+      onClick={refreshPage}
+    >
+      Cookie Stand Admin
+    </header>
+  );
+};
+
+export default Header;

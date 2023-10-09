@@ -1,12 +1,18 @@
-'use client';
+"use client";
 import React, { useState } from "react";
 import CreateForm from "./components/CookieStandAdmin/CreateForm";
 import ReportTable from "./components/CookieStandAdmin/ReportTable";
 import Footer from "./components/Layout/Footer";
 
 type CookieStand = {
+  id?: number;
   location: string;
-  hourly_sales: number[];
+  hourlySales: number[];
+  description: string;
+  minimumCustomerPerHour: number;
+  maximumCustomerPerHour: number;
+  averageCookiesPerSale: number;
+  owner?: string;
 };
 
 const Admin: React.FC = () => {
@@ -31,7 +37,7 @@ const Admin: React.FC = () => {
   const addRow = (data: CookieStand) => {
     setReports([...reports, data]);
   };
-  
+
   const onCreate = (data: CookieStand) => {
     setReports([...reports, data]);
   };
@@ -39,7 +45,7 @@ const Admin: React.FC = () => {
   return (
     <div>
       <CreateForm addRow={addRow} onCreate={onCreate} />
-      <ReportTable hours={hours} reports={reports} />
+      <ReportTable hours={hours} reports={reports} setReports={setReports} />
       <Footer numLocations={reports.length} />
     </div>
   );

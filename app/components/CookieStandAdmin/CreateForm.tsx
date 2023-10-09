@@ -1,14 +1,16 @@
-'use client';
+"use client";
+import axios from "axios";
 import React, { useRef } from "react";
 
-// type FormData = {
-//   [key: string]: string | number;
-// };
-
-
 type FormData = {
+  id?: number;
   location: string;
-  hourly_sales: number[];
+  hourlySales: number[];
+  description: string;
+  minimumCustomerPerHour: number;
+  maximumCustomerPerHour: number;
+  averageCookiesPerSale: number;
+  owner?: string;
 };
 
 type CreateFormProps = {
@@ -21,46 +23,59 @@ const CreateForm: React.FC<CreateFormProps> = ({ addRow, onCreate }) => {
   const minCustomersRef = useRef<HTMLInputElement>(null);
   const maxCustomersRef = useRef<HTMLInputElement>(null);
   const avgCookiesRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLInputElement>(null);
+  const ownerRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // const formData: FormData = {
-    //   location: locationRef.current?.value || "",
-    //   minCustomers: Number(minCustomersRef.current?.value) || 0,
-    //   maxCustomers: Number(maxCustomersRef.current?.value) || 0,
-    //   avgCookies: Number(avgCookiesRef.current?.value) || 0,
-    // };
 
     const formData: FormData = {
       location: locationRef.current?.value || "",
-      hourly_sales: [48, 42, 30, 24, 42, 24, 36, 42, 42, 48, 36, 42, 24, 36],
+      minimumCustomerPerHour: Number(minCustomersRef.current?.value) || 0,
+      maximumCustomerPerHour: Number(maxCustomersRef.current?.value) || 0,
+      averageCookiesPerSale: Number(avgCookiesRef.current?.value) || 0,
+      hourlySales: [],
+      description: descriptionRef.current?.value || "",
+      owner: ownerRef.current?.value || "",
     };
+
     addRow(formData);
-     onCreate(formData);
+    try {
+      const response = await axios.post(
+        "https://salmoncookieapplicationapi20231007222023.azurewebsites.net/api/CookieStands",
+        formData
+      );
+      onCreate(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("axios error: ", error);
+    }
   };
 
   return (
     <div className="flex flex-col items-center my-5 justify-center bg-grey-100">
-      <form className="w-full max-w-xl bg-[#66d6a9] shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+      <form
+        className="w-full max-w-xl bg-green-500 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        onSubmit={handleSubmit}
+      >
         <h2 className="block text-gray-800 text-lg font-bold mb-2">
           Create Cookie Stand
         </h2>
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Location{" "}
-          <input
-            ref={locationRef}
-            className="shadow appearance-none border rounder w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shoadow-outline"
-            type="text"
-            name="location"
-          />{" "}
-        </label>
-        <div className="flex space-x-4">
+        <div className="grid grid-cols-2 gap-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Location{" "}
+            <input
+              ref={locationRef}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              name="location"
+            />{" "}
+          </label>
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Min Customers Per Hour:{" "}
             <input
               ref={minCustomersRef}
-              className="shadow appearance-none border rounder w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shoadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="number"
               name="minCustomers"
             />
@@ -69,7 +84,7 @@ const CreateForm: React.FC<CreateFormProps> = ({ addRow, onCreate }) => {
             Max Customers Per Hour:{" "}
             <input
               ref={maxCustomersRef}
-              className="shadow appearance-none border rounder w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shoadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="number"
               name="maxCustomers"
             />
@@ -78,13 +93,31 @@ const CreateForm: React.FC<CreateFormProps> = ({ addRow, onCreate }) => {
             Avg Cookies Per Sale:{" "}
             <input
               ref={avgCookiesRef}
-              className="shadow appearance-none border rounder w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shoadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="number"
               name="avgCookies"
             />
           </label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Description:{" "}
+            <input
+              ref={descriptionRef}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              name="description"
+            />
+          </label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Owner:{" "}
+            <input
+              ref={ownerRef}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              name="owner"
+            />
+          </label>
           <button
-            className="bg-[#50a885] hover:bg-[#479475] fond-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline self-end"
+            className="bg-green-400 hover:bg-green-600 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline self-end mt-4 col-span-full"
             type="submit"
           >
             Create
@@ -93,6 +126,7 @@ const CreateForm: React.FC<CreateFormProps> = ({ addRow, onCreate }) => {
       </form>
     </div>
   );
+
 };
 
 export default CreateForm;

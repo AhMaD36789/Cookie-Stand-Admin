@@ -16,19 +16,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Head>
         <MainHead></MainHead>
-      </Head>
       <body className="min-h-screen">
-        <header>
           <Header />
-        </header>
         <main>
           <div>{children}</div>
         </main>
-        <footer>
-          <Footer />
-        </footer>
       </body>
     </html>
   );

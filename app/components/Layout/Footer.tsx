@@ -1,9 +1,13 @@
 import React from 'react'
 
-const Footer = () => {
+type FooterProps = {
+  numLocations: number;
+}
+
+const Footer: React.FC<FooterProps> = ({numLocations}) => {
   return (
     <div className='bg-green-500 text-black p-4'>
-        &copy; 2021
+        {numLocations} Locations World Wide
     </div>
   )
 }

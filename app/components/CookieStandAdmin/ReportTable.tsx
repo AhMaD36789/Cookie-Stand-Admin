@@ -45,7 +45,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ hours, reports }) => {
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-green-300 divide-y divide-black">
           {reports.map((report, i) => (
             <tr key={i}>
               <td className="px-6 py-4 whitespace-nowrap">{report.location}</td>
